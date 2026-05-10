@@ -6,9 +6,9 @@
 #include <stdexcept>
 #include <memory>
 
+
 #include "classes/headers/SegmentedDeque.h"
 #include "classes/headers/UIDeque.h"
-#include "classes/headers/MutableArraySequence.h"
 
 double Length(double g, double v, double alpha) {
     return v * v * sin(2.0 * alpha) / g;
@@ -25,7 +25,7 @@ std::tuple<double, double> SolveProjectile(double g, double x, const Sequence<T>
     while (iter->MoveNext()) {
         v_current = iter->Current();
         alpha1 = 0;
-        alpha2 = std::numbers::pi / 4;
+        alpha2 = M_PI / 4;
         while (alpha2 - alpha1 > eps) {
             alpha = (alpha1 + alpha2) / 2;
             if ((Length(g, v_current, alpha) - x) * (Length(g, v_current, alpha2) - x) >= 0) {

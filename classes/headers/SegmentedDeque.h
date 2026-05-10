@@ -20,34 +20,31 @@ private:
 
         class SegmentEnumerator : public IEnumerator<T> {
         private:
-            const Segment segment;
-            size_t currentIndex;
+            const Segment &segment;
+            size_t currentOffset;
 
         public:
             explicit SegmentEnumerator(const Segment &seg)
-                : segment(seg), currentIndex(segment.head) {
+                : segment(seg), currentOffset(0) {
             }
 
             bool MoveNext() override {
-                if (segment.IsEmpty()) return false;
-                if (currentIndex <= segment.tail) {
-                    ++currentIndex;
+                if (currentOffset < segment.size) {
+                    ++currentOffset;
                     return true;
                 }
                 return false;
             }
 
             T Current() const override {
-                if (currentIndex < segment.head ||
-                    currentIndex > segment.tail + 1 ||
-                    segment.IsEmpty()) {
+                if (currentOffset == 0 || currentOffset > segment.size) {
                     throw std::out_of_range("SegmentEnumerator out of range");
                 }
-                return segment.data.Get(currentIndex - 1);
+                return segment.data.Get(segment.head + currentOffset - 1);
             }
 
             void Reset() override {
-                currentIndex = segment.head - 1;
+                currentOffset = 0;
             }
         };
 
@@ -191,44 +188,40 @@ private:
     class SegmentedDequeIterator : public IEnumerator<T> {
     private:
         const DoublyLinkedList<Segment> &segmentsList;
-        IEnumerator<Segment> *segListEnum;
+        size_t segmentIndex;
         IEnumerator<T> *segEnum;
         T currentValue;
         bool hasCurrent;
 
     public:
         explicit SegmentedDequeIterator(const DoublyLinkedList<Segment> &list)
-            : segmentsList(list), segListEnum(nullptr), segEnum(nullptr), hasCurrent(false) {
+            : segmentsList(list), segmentIndex(0), segEnum(nullptr), hasCurrent(false) {
         }
 
         ~SegmentedDequeIterator() {
-            delete segListEnum;
             delete segEnum;
         }
 
         bool MoveNext() override {
-            if (!segListEnum) {
-                segListEnum = segmentsList.GetEnumerator();
+            if (segEnum && segEnum->MoveNext()) {
+                currentValue = segEnum->Current();
+                hasCurrent = true;
+                return true;
             }
 
-            if (segEnum) {
-                if (segEnum->MoveNext()) {
-                    currentValue = segEnum->Current();
-                    hasCurrent = true;
-                    return true;
-                }
-                delete segEnum;
-                segEnum = nullptr;
-            }
+            delete segEnum;
+            segEnum = nullptr;
 
-            while (segListEnum->MoveNext()) {
-                const Segment &seg = segListEnum->Current();
+            while (segmentIndex < segmentsList.GetSize()) {
+                const Segment &seg = segmentsList.Get(segmentIndex++);
                 segEnum = seg.GetEnumerator();
+
                 if (segEnum->MoveNext()) {
                     currentValue = segEnum->Current();
                     hasCurrent = true;
                     return true;
                 }
+
                 delete segEnum;
                 segEnum = nullptr;
             }
@@ -245,10 +238,9 @@ private:
         }
 
         void Reset() override {
-            delete segListEnum;
             delete segEnum;
-            segListEnum = nullptr;
             segEnum = nullptr;
+            segmentIndex = 0;
             hasCurrent = false;
         }
     };

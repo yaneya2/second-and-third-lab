@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 4.0)
 project(secondlab)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 add_subdirectory(googletest)
 
@@ -23,7 +24,6 @@ add_executable(secondlab main.cpp
         classes/cpp/UI.cpp
         classes/cpp/BItSequence.cpp
         classes/headers/BItSequence.h
-        classes/headers/Segment.h
         classes/headers/DoublyLinkedList.h
         classes/headers/SegmentedDeque.h
         classes/headers/Student.h
@@ -32,6 +32,8 @@ add_executable(secondlab main.cpp
         classes/headers/UIDeque.h
 
 )
+
+enable_testing()
 add_executable(tests
         tests/testsDynamicArray.cpp
         tests/testsLinkedList.cpp
@@ -40,3 +42,7 @@ add_executable(tests
 )
 
 target_link_libraries(tests PRIVATE GTest::gtest_main)
+
+set(SFML_DIR "D:/SFML-3.1.0/lib/cmake/SFML")
+find_package(SFML 3.1 REQUIRED COMPONENTS Graphics Window System)
+target_link_libraries(secondlab PRIVATE SFML::Graphics SFML::Window SFML::System)
