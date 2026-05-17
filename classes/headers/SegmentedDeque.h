@@ -5,8 +5,11 @@
 #include "Sequence.h"
 #include "DynamicArray.h"
 #include "IEnumerator.h"
-#include <iostream>
+#include <iosfwd>
 #include <stdexcept>
+
+template <typename T> class SegmentedDeque;
+template <typename T> std::ostream& operator<<(std::ostream& os, const SegmentedDeque<T>& deque);
 
 template<typename T>
 class SegmentedDeque : public Sequence<T> {
@@ -389,28 +392,7 @@ public:
         }
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const SegmentedDeque<T> &deque) {
-        os << "{ ";
-        for (size_t i = 0; i < deque.segments.GetSize(); ++i) {
-            const Segment &seg = deque.segments.Get(i);
-            size_t cap = deque.segmentLength;
-            os << "[";
-            for (size_t j = 0; j < cap; ++j) {
-                if (j > 0) os << ", ";
-                if (j < seg.GetHead() || j > seg.GetTail() || seg.GetSize() == 0) {
-                    os << "_";
-                } else {
-                    os << seg.Get(j);
-                }
-            }
-            os << "]";
-            if (i < deque.segments.GetSize() - 1) {
-                os << " ";
-            }
-        }
-        os << " }";
-        return os;
-    }
+    friend std::ostream &operator<<<T>(std::ostream &os, const SegmentedDeque<T> &deque);
 
     Sequence<T> *GetSubsequence(size_t startIndex, size_t endIndex) const override {
         if (startIndex > endIndex || endIndex >= length) {

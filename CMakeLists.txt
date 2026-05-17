@@ -28,6 +28,9 @@ add_executable(secondlab main.cpp
         classes/headers/SegmentedDeque.h
         classes/headers/Student.h
         classes/headers/Teacher.h
+        classes/cpp/UIDequeSFML.cpp
+        classes/headers/UIDequeSFML.h
+        classes/headers/SegmentedDequeIO.h
         classes/cpp/UIDeque.cpp
         classes/headers/UIDeque.h
 
