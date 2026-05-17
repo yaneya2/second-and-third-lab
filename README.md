@@ -26,6 +26,7 @@
 │       ├── MutableListSequence.h
 │       ├── Option.h
 │       ├── SegmentedDeque.h    [Лабораторная 3]
+│       ├── SegmentedDequeIO.h  [Лабораторная 3]
 │       ├── Sequence.h
 │       ├── Student.h           [Лабораторная 3]
 │       ├── Teacher.h           [Лабораторная 3]
