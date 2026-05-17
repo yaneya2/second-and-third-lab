@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 #include "../headers/SegmentedDeque.h"
+#include "../headers/SegmentedDequeIO.h"
 #include "../headers/Sequence.h"
 #include "../headers/UIDeque.h"
 
