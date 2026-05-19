@@ -1,6 +1,7 @@
 #ifndef SEQUENCE_H
 #define SEQUENCE_H
 
+#include <any>
 #include <stdexcept>
 #include "Option.h"
 #include "IEnumerator.h"
@@ -120,6 +121,13 @@ public:
         return Option<T>();
     }
 
+    // template<typename ... Args>
+    // static Sequence<Sequence<std::any>> *zip(const Args& ... param) {
+    //
+    //
+    // }
+
+
     static Sequence<Sequence<T> *> *Zip(const Sequence<Sequence<T> *> &outerSequence) {
         size_t outerLength = outerSequence.GetLength();
         if (outerLength == 0) {
@@ -145,7 +153,7 @@ public:
             size_t sourceIdx = 0;
             auto *tempOuterEnumerator = outerSequence.GetEnumerator();
             while (tempOuterEnumerator->MoveNext()) {
-                innerEnumerators.Append(tempOuterEnumerator->Current()->GetEnumerator());
+                innerEnumerators.Set(sourceIdx++,tempOuterEnumerator->Current()->GetEnumerator());
             }
             delete tempOuterEnumerator;
         }
@@ -190,9 +198,10 @@ public:
 
         DynamicArray<IEnumerator<T> *> innerEnumerators(outerLength);
         {
+            size_t sourceIdx = 0;
             auto *tempOuterEnumerator = outerSequence.GetEnumerator();
             while (tempOuterEnumerator->MoveNext()) {
-                innerEnumerators.Append(tempOuterEnumerator->Current()->GetEnumerator());
+                innerEnumerators.Set(sourceIdx++,tempOuterEnumerator->Current()->GetEnumerator());
             }
             delete tempOuterEnumerator;
         }
