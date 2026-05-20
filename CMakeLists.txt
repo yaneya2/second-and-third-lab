@@ -31,7 +31,8 @@ add_executable(secondlab main.cpp
         classes/headers/SegmentedDequeIO.h
         classes/cpp/UIDeque.cpp
         classes/headers/UIDeque.h
-
+        classes/headers/UIDequeSFML.h
+        classes/cpp/UIDequeSFML.cpp
 )
 
 enable_testing()
