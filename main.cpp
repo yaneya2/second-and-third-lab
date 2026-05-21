@@ -8,7 +8,7 @@
 
 
 #include "classes/headers/SegmentedDeque.h"
-#include "classes/headers/UIDeque.h"
+#include "classes/headers/UIDequeSFML.h"
 
 double Length(double g, double v, double alpha) {
     return v * v * sin(2.0 * alpha) / g;
@@ -43,6 +43,6 @@ std::tuple<double, double> SolveProjectile(double g, double x, const Sequence<T>
 
 int main() {
     system("chcp 65001");
-    run();
+    runSFML();
     return 0;
 }
